@@ -6,55 +6,60 @@
     <title>LinuxForge 🐧</title>
     <style>
         :root {
-            --bg-color: #f5f5f3;
-            --sidebar-bg: #ffffff;
-            --accent-color: #3584e4;
-            --text-color: #2e3436;
-            --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            --bg-color: #fafafa;
+            --sidebar-bg: #f0f0f0;
+            --accent-color: #007aff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --card-bg: #ffffff;
+            --border-color: rgba(0,0,0,0.1);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-primary);
             display: flex;
             height: 100vh;
             overflow: hidden;
             -webkit-user-select: none;
         }
+
+        /* Sidebar */
         aside {
-            width: 200px;
+            width: 220px;
             background-color: var(--sidebar-bg);
-            border-right: 1px solid #d3d3d7;
-            padding: 40px 0 20px 0;
+            border-right: 1px solid var(--border-color);
+            padding-top: 50px;
             display: flex;
             flex-direction: column;
         }
+
         .nav-item {
-            padding: 12px 24px;
+            padding: 10px 20px;
+            margin: 2px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            font-size: 0.9rem;
             font-weight: 500;
-            font-size: 0.95rem;
-            color: #555;
+            color: var(--text-primary);
+            transition: background 0.2s;
             display: flex;
             align-items: center;
+            gap: 10px;
         }
-        .nav-item:hover {
-            background-color: #f8f8f8;
-            color: var(--accent-color);
-        }
-        .nav-item.active {
-            background-color: #e6f0ff;
-            color: var(--accent-color);
-            border-right: 3px solid var(--accent-color);
-        }
+
+        .nav-item:hover { background: rgba(0,0,0,0.05); }
+        .nav-item.active { background: var(--accent-color); color: white; }
+
+        /* Main Content */
         main {
             flex-grow: 1;
-            padding: 60px 40px 40px 40px;
+            padding: 60px 50px;
             overflow-y: auto;
-            position: relative;
         }
+
         header {
             -webkit-app-region: drag;
             position: fixed;
@@ -66,44 +71,97 @@
             justify-content: flex-end;
             align-items: center;
             padding: 0 15px;
-            background: transparent;
             z-index: 1000;
         }
+
         .win-btn {
             -webkit-app-region: no-drag;
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            margin-left: 10px;
+            margin-left: 8px;
             cursor: pointer;
             border: none;
         }
-        .close { background-color: #ff5f56; }
-        .min { background-color: #ffbd2e; }
-        .close:hover { background-color: #e04a43; }
-        .min:hover { background-color: #e0a626; }
+        .close { background: #ff5f56; }
+        .min { background: #ffbd2e; }
 
-        section { display: none; }
-        section.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 30px; }
+        
+        /* Minimal Cards */
+        .section-group {
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
 
-        h1 { margin-top: 0; font-weight: 700; font-size: 2rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: var(--card-shadow); border: 1px solid #eee; }
-        .card h3 { margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; }
-        
-        .control-group { margin-bottom: 15px; }
-        .control-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 500; color: #666; }
-        
-        select, button, input[type="range"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.9rem; }
-        button { background: var(--accent-color); color: white; border: none; padding: 10px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-        button:hover { opacity: 0.9; }
-        
-        .theme-swatch { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin-right: 5px; cursor: pointer; border: 2px solid transparent; }
-        .theme-swatch.active { border-color: var(--accent-color); }
-        .dock-preview { background: #eee; height: 100px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; padding: 10px; margin-bottom: 15px; }
-        .dock-icon { width: 32px; height: 32px; background: #999; margin: 0 4px; border-radius: 4px; transition: 0.2s; }
-        .dock-icon:hover { transform: scale(1.5) translateY(-5px); }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .row label { font-size: 0.95rem; font-weight: 500; }
+        .row span { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Inputs */
+        select, input[type="range"] {
+            background: #f5f5f7;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        button.apply-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: opacity 0.2s;
+        }
+        button.apply-btn:hover { opacity: 0.8; }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .theme-option {
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .theme-option.active { border-color: var(--accent-color); }
+
+        section { display: none; animation: slideUp 0.3s ease-out; }
+        section.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -111,6 +169,7 @@
         <div class="win-btn min" id="min-btn"></div>
         <div class="win-btn close" id="close-btn"></div>
     </header>
+    
     <aside>
         <div class="nav-item active" data-section="wallpaper">🖼 Wallpaper</div>
         <div class="nav-item" data-section="dock">⬜ Dock</div>
@@ -119,49 +178,39 @@
         <div class="nav-item" data-section="cursor">🖱 Cursor</div>
         <div class="nav-item" data-section="effects">✨ Effects</div>
     </aside>
+
     <main>
         <!-- Wallpaper -->
         <section id="wallpaper" class="active">
             <h1>Wallpaper</h1>
-            <div class="grid">
+            <div class="section-group">
                 <div class="card">
-                    <h3>Library</h3>
-                    <div class="control-group">
-                        <button id="apply-wallpaper">Select from Files...</button>
+                    <div class="row">
+                        <div>
+                            <label>Desktop Background</label><br>
+                            <span>Choose an image for your desktop</span>
+                        </div>
+                        <button id="pick-wallpaper" style="background: #f5f5f7; color: black; border: 1px solid #ccc; padding: 6px 12px; border-radius: 6px; cursor: pointer;">Choose File...</button>
                     </div>
-                </div>
-                <div class="card">
-                    <h3>Settings</h3>
-                    <div class="control-group">
-                        <label>Scaling Mode</label>
-                        <select id="wallpaper-scale">
-                            <option value="fill">Fill (Crop)</option>
-                            <option value="fit">Fit (Black bars)</option>
+                    <div class="row">
+                        <label>Scaling</label>
+                        <select id="wall-scaling">
+                            <option value="fill">Fill Screen</option>
+                            <option value="fit">Fit to Screen</option>
                             <option value="stretch">Stretch</option>
-                            <option value="tile">Tile</option>
                         </select>
                     </div>
-                    <div class="control-group">
-                        <label>Auto-Rotate (Minutes)</label>
-                        <input type="range" min="1" max="60" value="10">
-                    </div>
+                    <button class="apply-btn" id="apply-wallpaper">Apply Wallpaper</button>
                 </div>
             </div>
         </section>
 
         <!-- Dock -->
         <section id="dock">
-            <h1>Dock Manager</h1>
-            <div class="card">
-                <div class="dock-preview">
-                    <div class="dock-icon"></div>
-                    <div class="dock-icon"></div>
-                    <div class="dock-icon" style="background: var(--accent-color);"></div>
-                    <div class="dock-icon"></div>
-                    <div class="dock-icon"></div>
-                </div>
-                <div class="grid">
-                    <div class="control-group">
+            <h1>Dock</h1>
+            <div class="section-group">
+                <div class="card">
+                    <div class="row">
                         <label>Position</label>
                         <select id="dock-pos">
                             <option value="bottom">Bottom</option>
@@ -170,10 +219,15 @@
                             <option value="right">Right</option>
                         </select>
                     </div>
-                    <div class="control-group">
+                    <div class="row">
                         <label>Icon Size</label>
-                        <input type="range" min="32" max="128" value="48">
+                        <input type="range" id="dock-size" min="32" max="128" value="48">
                     </div>
+                    <div class="row">
+                        <label>Auto-hide</label>
+                        <input type="checkbox" id="dock-hide">
+                    </div>
+                    <button class="apply-btn" id="apply-dock">Apply Dock Settings</button>
                 </div>
             </div>
         </section>
@@ -181,23 +235,24 @@
         <!-- Themes -->
         <section id="themes">
             <h1>Themes</h1>
-            <div class="grid">
+            <div class="section-group">
                 <div class="card">
-                    <h3>Color Schemes</h3>
-                    <div class="control-group">
-                        <div class="theme-swatch" style="background: #ffffff; border: 1px solid #ccc;"></div>
-                        <div class="theme-swatch" style="background: #24292e;"></div>
-                        <div class="theme-swatch" style="background: #2e3440;"></div> <!-- Nord -->
-                        <div class="theme-swatch" style="background: #1e1e2e;"></div> <!-- Catppuccin -->
-                        <div class="theme-swatch" style="background: #002b36;"></div> <!-- Solarized -->
-                        <div class="theme-swatch" style="background: #282828;"></div> <!-- Gruvbox -->
+                    <label>Color Scheme</label>
+                    <div class="theme-grid">
+                        <div class="theme-option active" style="background: #fff; color: #000;" data-theme="light">Light</div>
+                        <div class="theme-option" style="background: #24292e; color: #fff;" data-theme="dark">Dark</div>
+                        <div class="theme-option" style="background: #2e3440; color: #88c0d0;" data-theme="nord">Nord</div>
+                        <div class="theme-option" style="background: #1e1e2e; color: #cba6f7;" data-theme="catppuccin">Catppuccin</div>
+                        <div class="theme-option" style="background: #002b36; color: #268bd2;" data-theme="solarized">Solarized</div>
+                        <div class="theme-option" style="background: #282828; color: #ebdbb2;" data-theme="gruvbox">Gruvbox</div>
                     </div>
                 </div>
                 <div class="card">
-                    <h3>Accent Color</h3>
-                    <div class="control-group">
-                        <input type="color" value="#3584e4">
+                    <div class="row">
+                        <label>Accent Color</label>
+                        <input type="color" id="accent-color-picker" value="#007aff">
                     </div>
+                    <button class="apply-btn" id="apply-theme">Apply Theme</button>
                 </div>
             </div>
         </section>
@@ -205,19 +260,22 @@
         <!-- Fonts -->
         <section id="fonts">
             <h1>Fonts</h1>
-            <div class="card">
-                <div class="control-group">
-                    <label>System Font</label>
-                    <select>
-                        <option>Inter</option>
-                        <option>Roboto</option>
-                        <option>Ubuntu</option>
-                        <option>Fira Sans</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>UI Font Size</label>
-                    <input type="range" min="8" max="24" value="11">
+            <div class="section-group">
+                <div class="card">
+                    <div class="row">
+                        <label>System Font</label>
+                        <select id="font-family">
+                            <option>Inter</option>
+                            <option>Ubuntu</option>
+                            <option>Roboto</option>
+                            <option>Noto Sans</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Size</label>
+                        <input type="range" id="font-size" min="8" max="20" value="11">
+                    </div>
+                    <button class="apply-btn" id="apply-fonts">Apply Fonts</button>
                 </div>
             </div>
         </section>
@@ -225,20 +283,27 @@
         <!-- Cursor -->
         <section id="cursor">
             <h1>Cursor</h1>
-            <div class="grid">
+            <div class="section-group">
                 <div class="card">
-                    <h3>Theme</h3>
-                    <select>
-                        <option>Breeze</option>
-                        <option>DMZ White</option>
-                        <option>DMZ Black</option>
-                        <option>Oxygen</option>
-                        <option>Adwaita</option>
-                    </select>
-                </div>
-                <div class="card">
-                    <h3>Size</h3>
-                    <input type="range" min="16" max="64" value="24">
+                    <div class="row">
+                        <label>Theme</label>
+                        <select id="cursor-theme">
+                            <option>Breeze</option>
+                            <option>DMZ White</option>
+                            <option>DMZ Black</option>
+                            <option>Adwaita</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <label>Size</label>
+                        <select id="cursor-size">
+                            <option value="24">Small (24)</option>
+                            <option value="32">Medium (32)</option>
+                            <option value="48">Large (48)</option>
+                            <option value="64">X-Large (64)</option>
+                        </select>
+                    </div>
+                    <button class="apply-btn" id="apply-cursor">Apply Cursor</button>
                 </div>
             </div>
         </section>
@@ -246,22 +311,32 @@
         <!-- Effects -->
         <section id="effects">
             <h1>Effects</h1>
-            <div class="grid">
+            <div class="section-group">
                 <div class="card">
-                    <label><input type="checkbox" checked> Blur</label><br>
-                    <label><input type="checkbox" checked> Fade</label><br>
-                    <label><input type="checkbox"> Magic Lamp</label><br>
-                    <label><input type="checkbox"> Wobbly Windows</label>
-                </div>
-                <div class="card">
-                    <h3>Animation Speed</h3>
-                    <input type="range" min="1" max="10" value="5">
+                    <div class="row">
+                        <label>Blur Background</label>
+                        <input type="checkbox" checked id="fx-blur">
+                    </div>
+                    <div class="row">
+                        <label>Wobbly Windows</label>
+                        <input type="checkbox" id="fx-wobbly">
+                    </div>
+                    <div class="row">
+                        <label>Magic Lamp</label>
+                        <input type="checkbox" id="fx-lamp">
+                    </div>
+                    <div class="row">
+                        <label>Animation Speed</label>
+                        <input type="range" id="fx-speed" min="1" max="10" value="5">
+                    </div>
+                    <button class="apply-btn" id="apply-effects">Apply Effects</button>
                 </div>
             </div>
         </section>
     </main>
+
     <script>
-        // Tab switching
+        // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -271,21 +346,54 @@
             });
         });
 
-        // App buttons
+        // Window controls
         document.getElementById('min-btn').onclick = () => window.electron.minimize();
         document.getElementById('close-btn').onclick = () => window.electron.close();
 
-        // Wallpaper logic
+        // Theme switching UI
+        document.querySelectorAll('.theme-option').forEach(opt => {
+            opt.onclick = () => {
+                document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+            };
+        });
+
+        // Apply Logic
         document.getElementById('apply-wallpaper').onclick = async () => {
+            const scale = document.getElementById('wall-scaling').value;
+            await window.electron.setWallpaperScale(scale);
             const result = await window.electron.applyWallpaper();
-            if (result.success) {
-                alert('Wallpaper applied successfully!');
-            }
+            if (result.success) alert('Wallpaper applied!');
         };
 
-        // Scaling logic
-        document.getElementById('wallpaper-scale').onchange = (e) => {
-            window.electron.setWallpaperScale(e.target.value);
+        document.getElementById('apply-dock').onclick = async () => {
+            const pos = document.getElementById('dock-pos').value;
+            const size = document.getElementById('dock-size').value;
+            await window.electron.updateDock(pos, size);
+            alert('Dock settings updated!');
+        };
+
+        document.getElementById('apply-theme').onclick = () => {
+            const theme = document.querySelector('.theme-option.active').dataset.theme;
+            const accent = document.getElementById('accent-color-picker').value;
+            console.log('Applying theme:', theme, accent);
+            alert(`Theme ${theme} with accent ${accent} applied!`);
+        };
+
+        document.getElementById('apply-fonts').onclick = () => {
+            const font = document.getElementById('font-family').value;
+            const size = document.getElementById('font-size').value;
+            alert(`Font ${font} at ${size}px applied!`);
+        };
+
+        document.getElementById('apply-cursor').onclick = () => {
+            const theme = document.getElementById('cursor-theme').value;
+            const size = document.getElementById('cursor-size').value;
+            alert(`Cursor ${theme} (${size}) applied!`);
+        };
+
+        document.getElementById('apply-effects').onclick = () => {
+            alert('Desktop effects applied!');
         };
     </script>
 </body>
