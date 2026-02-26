@@ -5,7 +5,26 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:linux": "electron-builder --linux",
+    "build:arm64": "electron-builder --linux --arm64",
+    "build:armv7": "electron-builder --linux --armv7l"
+  },
+  "build": {
+    "appId": "com.linuxforge.app",
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "System"
+    },
+    "arm64": {
+      "target": "AppImage"
+    },
+    "armv7l": {
+      "target": "AppImage"
+    }
   },
   "author": "Montuvlv",
   "license": "MIT",

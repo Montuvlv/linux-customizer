@@ -33,6 +33,18 @@ LinuxForge is a desktop customization tool for Linux, specifically built for **K
    npm start
    ```
 
+## 🏗 Build for ARM
+
+LinuxForge supports ARM64 (e.g., Raspberry Pi, Apple Silicon) and ARMv7l. To build for these architectures:
+
+```bash
+# Build for ARM64 (64-bit)
+npm run build:arm64
+
+# Build for ARMv7l (32-bit)
+npm run build:armv7
+```
+
 ## License
 
 MIT
