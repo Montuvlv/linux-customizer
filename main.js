@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const { setWallpaper } = require('./backend/wallpaper');
+const { setWallpaper, setWallpaperScaling } = require('./backend/wallpaper');
+const { getInstalledApps, updateDockSettings } = require('./backend/dock');
 
 let win;
 
@@ -29,6 +30,7 @@ app.on('window-all-closed', () => {
 ipcMain.on('win:minimize', () => win.minimize());
 ipcMain.on('win:close', () => win.close());
 
+// Wallpaper handlers
 ipcMain.handle('wallpaper:apply', async (event, imagePath) => {
     if (!imagePath) {
         const { canceled, filePaths } = await dialog.showOpenDialog(win, {
@@ -40,4 +42,17 @@ ipcMain.handle('wallpaper:apply', async (event, imagePath) => {
         imagePath = filePaths[0];
     }
     return await setWallpaper(imagePath);
+});
+
+ipcMain.handle('wallpaper:scale', async (event, scale) => {
+    return await setWallpaperScaling(scale);
+});
+
+// Dock handlers
+ipcMain.handle('dock:getApps', async () => {
+    return await getInstalledApps();
+});
+
+ipcMain.handle('dock:update', async (event, { pos, size }) => {
+    return await updateDockSettings(pos, size);
 });

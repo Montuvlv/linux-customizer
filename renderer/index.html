@@ -10,6 +10,7 @@
             --sidebar-bg: #ffffff;
             --accent-color: #3584e4;
             --text-color: #2e3436;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -25,59 +26,84 @@
             width: 200px;
             background-color: var(--sidebar-bg);
             border-right: 1px solid #d3d3d7;
-            padding: 20px 0;
+            padding: 40px 0 20px 0;
             display: flex;
             flex-direction: column;
         }
         .nav-item {
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #555;
+            display: flex;
+            align-items: center;
         }
         .nav-item:hover {
-            background-color: #f0f0f0;
+            background-color: #f8f8f8;
+            color: var(--accent-color);
         }
         .nav-item.active {
-            background-color: var(--accent-color);
-            color: white;
+            background-color: #e6f0ff;
+            color: var(--accent-color);
+            border-right: 3px solid var(--accent-color);
         }
         main {
             flex-grow: 1;
-            padding: 40px;
+            padding: 60px 40px 40px 40px;
             overflow-y: auto;
+            position: relative;
         }
         header {
             -webkit-app-region: drag;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 30px;
+            height: 40px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 15px;
+            background: transparent;
+            z-index: 1000;
         }
         .win-btn {
             -webkit-app-region: no-drag;
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            margin-left: 8px;
+            margin-left: 10px;
             cursor: pointer;
+            border: none;
         }
         .close { background-color: #ff5f56; }
         .min { background-color: #ffbd2e; }
+        .close:hover { background-color: #e04a43; }
+        .min:hover { background-color: #e0a626; }
+
         section { display: none; }
-        section.active { display: block; }
-        h1 { margin-top: 0; }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
+        section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { margin-top: 0; font-weight: 700; font-size: 2rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 24px; border-radius: 12px; box-shadow: var(--card-shadow); border: 1px solid #eee; }
+        .card h3 { margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; }
+        
+        .control-group { margin-bottom: 15px; }
+        .control-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 500; color: #666; }
+        
+        select, button, input[type="range"] { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 0.9rem; }
+        button { background: var(--accent-color); color: white; border: none; padding: 10px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        button:hover { opacity: 0.9; }
+        
+        .theme-swatch { width: 30px; height: 30px; border-radius: 50%; display: inline-block; margin-right: 5px; cursor: pointer; border: 2px solid transparent; }
+        .theme-swatch.active { border-color: var(--accent-color); }
+        .dock-preview { background: #eee; height: 100px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; padding: 10px; margin-bottom: 15px; }
+        .dock-icon { width: 32px; height: 32px; background: #999; margin: 0 4px; border-radius: 4px; transition: 0.2s; }
+        .dock-icon:hover { transform: scale(1.5) translateY(-5px); }
     </style>
 </head>
 <body>
@@ -94,45 +120,148 @@
         <div class="nav-item" data-section="effects">✨ Effects</div>
     </aside>
     <main>
+        <!-- Wallpaper -->
         <section id="wallpaper" class="active">
             <h1>Wallpaper</h1>
-            <div class="card">
-                <p>Select your KDE wallpaper.</p>
-                <button id="apply-wallpaper">Apply Wallpaper</button>
+            <div class="grid">
+                <div class="card">
+                    <h3>Library</h3>
+                    <div class="control-group">
+                        <button id="apply-wallpaper">Select from Files...</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Settings</h3>
+                    <div class="control-group">
+                        <label>Scaling Mode</label>
+                        <select id="wallpaper-scale">
+                            <option value="fill">Fill (Crop)</option>
+                            <option value="fit">Fit (Black bars)</option>
+                            <option value="stretch">Stretch</option>
+                            <option value="tile">Tile</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Auto-Rotate (Minutes)</label>
+                        <input type="range" min="1" max="60" value="10">
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- Dock -->
         <section id="dock">
             <h1>Dock Manager</h1>
             <div class="card">
-                <p>Customize your dock settings.</p>
+                <div class="dock-preview">
+                    <div class="dock-icon"></div>
+                    <div class="dock-icon"></div>
+                    <div class="dock-icon" style="background: var(--accent-color);"></div>
+                    <div class="dock-icon"></div>
+                    <div class="dock-icon"></div>
+                </div>
+                <div class="grid">
+                    <div class="control-group">
+                        <label>Position</label>
+                        <select id="dock-pos">
+                            <option value="bottom">Bottom</option>
+                            <option value="top">Top</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label>Icon Size</label>
+                        <input type="range" min="32" max="128" value="48">
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- Themes -->
         <section id="themes">
             <h1>Themes</h1>
-            <div class="card">
-                <p>Choose your color scheme.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Color Schemes</h3>
+                    <div class="control-group">
+                        <div class="theme-swatch" style="background: #ffffff; border: 1px solid #ccc;"></div>
+                        <div class="theme-swatch" style="background: #24292e;"></div>
+                        <div class="theme-swatch" style="background: #2e3440;"></div> <!-- Nord -->
+                        <div class="theme-swatch" style="background: #1e1e2e;"></div> <!-- Catppuccin -->
+                        <div class="theme-swatch" style="background: #002b36;"></div> <!-- Solarized -->
+                        <div class="theme-swatch" style="background: #282828;"></div> <!-- Gruvbox -->
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Accent Color</h3>
+                    <div class="control-group">
+                        <input type="color" value="#3584e4">
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- Fonts -->
         <section id="fonts">
             <h1>Fonts</h1>
             <div class="card">
-                <p>Pick system-wide fonts.</p>
+                <div class="control-group">
+                    <label>System Font</label>
+                    <select>
+                        <option>Inter</option>
+                        <option>Roboto</option>
+                        <option>Ubuntu</option>
+                        <option>Fira Sans</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>UI Font Size</label>
+                    <input type="range" min="8" max="24" value="11">
+                </div>
             </div>
         </section>
+
+        <!-- Cursor -->
         <section id="cursor">
             <h1>Cursor</h1>
-            <div class="card">
-                <p>Choose cursor themes and size.</p>
+            <div class="grid">
+                <div class="card">
+                    <h3>Theme</h3>
+                    <select>
+                        <option>Breeze</option>
+                        <option>DMZ White</option>
+                        <option>DMZ Black</option>
+                        <option>Oxygen</option>
+                        <option>Adwaita</option>
+                    </select>
+                </div>
+                <div class="card">
+                    <h3>Size</h3>
+                    <input type="range" min="16" max="64" value="24">
+                </div>
             </div>
         </section>
+
+        <!-- Effects -->
         <section id="effects">
             <h1>Effects</h1>
-            <div class="card">
-                <p>Toggle desktop effects.</p>
+            <div class="grid">
+                <div class="card">
+                    <label><input type="checkbox" checked> Blur</label><br>
+                    <label><input type="checkbox" checked> Fade</label><br>
+                    <label><input type="checkbox"> Magic Lamp</label><br>
+                    <label><input type="checkbox"> Wobbly Windows</label>
+                </div>
+                <div class="card">
+                    <h3>Animation Speed</h3>
+                    <input type="range" min="1" max="10" value="5">
+                </div>
             </div>
         </section>
     </main>
     <script>
+        // Tab switching
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -142,16 +271,21 @@
             });
         });
 
+        // App buttons
         document.getElementById('min-btn').onclick = () => window.electron.minimize();
         document.getElementById('close-btn').onclick = () => window.electron.close();
 
+        // Wallpaper logic
         document.getElementById('apply-wallpaper').onclick = async () => {
             const result = await window.electron.applyWallpaper();
             if (result.success) {
-                console.log('Wallpaper applied!');
-            } else {
-                console.log('Failed to apply wallpaper:', result.message);
+                alert('Wallpaper applied successfully!');
             }
+        };
+
+        // Scaling logic
+        document.getElementById('wallpaper-scale').onchange = (e) => {
+            window.electron.setWallpaperScale(e.target.value);
         };
     </script>
 </body>
